@@ -40,8 +40,10 @@ server.on('connection', function (c) {
       c.write('Content-Type: text/plain\r\n')
       c.write('Access-Control-Allow-Origin: *\r\n')
       c.write('Access-Control-Request-Headers: *\r\n')
-      c.write('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE');
-      c.write('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, keyapi, content-type');
+      c.write('Access-Control-Allow-Methods: *\r\n')
+      c.write('Access-Control-Allow-Headers: *\r\n')
+      // c.write('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE\r\n')
+      // c.write('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, keyapi, content-type\r\n')
       c.write('\r\n')
       setTimeout(function () {
         c.end()
