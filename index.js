@@ -157,12 +157,13 @@ var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json()
 
 var app = express();
-// app.use(bodyParser.text({
-//   type: function(req) {
-//     return 'text';
-//   }
-// }));
-app.use(jsonParser);
+app.use(bodyParser.json({
+  type: function(req) {
+    return 'json';
+  }
+}));
+// app.use(jsonParser);
+// app.use(bodyParser.urlencoded({limit: '20mb', extended: true }));
 // log info about ALL requests to ALL paths
 app.all('*', function (req, res, next) {
     console.log('*** A request ***');
