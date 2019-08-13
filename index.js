@@ -123,28 +123,108 @@ var getPort = require('get-port')
 
 
 
-var http = require('http');
- 
-var server = http.createServer(function(request,response){
- 
-  response.writeHead(200, {
-      'Content-Type': 'text/json',
-      'Access-Control-Allow-Origin': '*',
-      'X-Powered-By':'nodejs',
-      'Access-Control-Allow-Methods': '*',
-      'Access-Control-Allow-Headers': '*'
-  });
-  request.pipe(response);
- 
-})//.listen(port);
+// var http = require('http');
+// var express = require('express');
+// var http = require('http');
+// var bodyParser = require('body-parser');
 
+// var app = express();
+// var jsonParser = bodyParser.json()
+// app.use(bodyParser.text({
+//   type: function(req) {
+//     return 'text';
+//   }
+// }));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var express = require('express');
+var http = require('http');
+var bodyParser = require('body-parser');
+
+var jsonParser = bodyParser.json()
+
+var app = express();
+// app.use(bodyParser.text({
+//   type: function(req) {
+//     return 'text';
+//   }
+// }));
+app.use(jsonParser);
+// log info about ALL requests to ALL paths
+app.all('*', function (req, res, next) {
+    console.log('*** A request ***');
+    console.log('method: ' + req.method);
+    console.log('url: ' + req.url);
+    console.log('*****************');
+
+    res.append('Access-Control-Allow-Origin', ['*']);
+    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
+    res.append('Access-Control-Allow-Headers', 'Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, keyapi, content-type');
+ 
+    // next();
+    // res.writeHead(200, {
+    //     'Content-Type': 'text/json',
+    //     'Access-Control-Allow-Origin': '*',
+    //     'X-Powered-By':'nodejs',
+    //     'Access-Control-Allow-Methods': '*',
+    //     'Access-Control-Allow-Headers': '*'
+    // });
+    // req.pipe(res);
+    // console.log(res);
+    res.send({
+      data: req.body
+    });
+    res.end();
+});
+
+// var bodyParser = require('body-parser')
+ 
+// create application/json parser
+// var jsonParser = bodyParser.json()
+ 
+// var server = http.createServer(function(request,response){
+ 
+//   response.writeHead(200, {
+//       'Content-Type': 'text/json',
+//       'Access-Control-Allow-Origin': '*',
+//       'X-Powered-By':'nodejs',
+//       'Access-Control-Allow-Methods': '*',
+//       'Access-Control-Allow-Headers': '*'
+//   });
+//   request.pipe(response);
+//   console.log(response);
+// })//.listen(port);
+
+
+// var port = process.argv[2] || process.env.PORT
+
+// if (port) {
+//   server.listen(port)
+// } else {
+//   getPort({ port: 3000 }).then(function (port) {
+//     server.listen(port)
+//   })
+// }
 
 var port = process.argv[2] || process.env.PORT
 
 if (port) {
-  server.listen(port)
+  app.listen(port)
 } else {
   getPort({ port: 3000 }).then(function (port) {
-    server.listen(port)
+    app.listen(port)
   })
 }
