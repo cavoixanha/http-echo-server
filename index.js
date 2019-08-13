@@ -1,7 +1,7 @@
-// #!/usr/bin/env node
-// 'use strict'
+#!/usr/bin/env node
+'use strict'
 
-// var getPort = require('get-port')
+var getPort = require('get-port')
 // var server = require('net').createServer()
 
 // var cid = 0
@@ -93,7 +93,7 @@
 
 // var http  = require('http');
 // var fs    = require('fs');
-var port  = "3000" ;
+// var port  = "3000" ;
 // const express = require('express')
 //       // cors = require('cors'),
 //       // morgan = require('morgan'),
@@ -125,7 +125,7 @@ var port  = "3000" ;
 
 var http = require('http');
  
-http.createServer(function(request,response){
+var server = http.createServer(function(request,response){
  
   response.writeHead(200, {
       'Content-Type': 'text/json',
@@ -136,4 +136,15 @@ http.createServer(function(request,response){
   });
   request.pipe(response);
  
-}).listen(port);
+})//.listen(port);
+
+
+var port = process.argv[2] || process.env.PORT
+
+if (port) {
+  server.listen(port)
+} else {
+  getPort({ port: 3000 }).then(function (port) {
+    server.listen(port)
+  })
+}
