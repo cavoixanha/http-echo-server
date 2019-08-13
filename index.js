@@ -91,63 +91,6 @@ var getPort = require('get-port')
   X-Powered-By:nodejs
 */
 
-// var http  = require('http');
-// var fs    = require('fs');
-// var port  = "3000" ;
-// const express = require('express')
-//       // cors = require('cors'),
-//       // morgan = require('morgan'),
-//       // cookieParser = require('cookie-parser'),
-//       bodyParser = require('body-parser'),
-
-// http.createServer(function(request, response) {
-
-//     response.writeHead(200, {
-//         'Content-Type': 'text/json',
-//         'Access-Control-Allow-Origin': '*',
-//         'X-Powered-By':'nodejs'
-//     });
-
-
-//     // fs.readFile('data.json', function(err, content){
-//     //     response.write(content);
-//     //     response.end();
-//     // });
-//     console.log(request.body);
-//     response.write(request.body);
-//     response.end();
-
-// }).listen(port);
-
-// console.log("Listening on port " + port );
-
-
-
-// var http = require('http');
-// var express = require('express');
-// var http = require('http');
-// var bodyParser = require('body-parser');
-
-// var app = express();
-// var jsonParser = bodyParser.json()
-// app.use(bodyParser.text({
-//   type: function(req) {
-//     return 'text';
-//   }
-// }));
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 var express = require('express');
@@ -163,7 +106,7 @@ app.use(bodyParser.json({
   }
 }));
 // app.use(jsonParser);
-// app.use(bodyParser.urlencoded({limit: '20mb', extended: true }));
+app.use(bodyParser.urlencoded({limit: '20mb', extended: true }));
 // log info about ALL requests to ALL paths
 app.all('*', function (req, res, next) {
     console.log('*** A request ***');
@@ -185,17 +128,56 @@ app.all('*', function (req, res, next) {
     // });
     // req.pipe(res);
     // console.log(res);
+    function getRndInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) ) + min;
+    }
+    req.body.id = getRndInteger(1, 999);
+
+    if(req.body.view_type) {
+      req.body.local_filters = [
+        {
+          "infobox_type": req.body.view_type,
+          "expanded": 0,
+          "filters": [
+            {
+              "local_filter_id": getRndInteger(1000, 9999),
+              "root_id": "",
+              "set_account_id": 0,
+              "filter_type": 0
+            }
+          ]
+        }
+      ]
+      req.body.infobox_states = [
+        {
+          "infobox_type": req.body.view_type,
+          "previewed": 0,
+          "active": 0,
+          "expanded": 0
+        }
+      ]
+      req.body.created_date = Date.now();
+      req.body.updated_date = Date.now();
+    }
     res.send({
-      data: req.body
+      data: [
+        req.body
+      ]
     });
     res.end();
 });
 
-// var bodyParser = require('body-parser')
- 
-// create application/json parser
-// var jsonParser = bodyParser.json()
- 
+var port = process.argv[2] || process.env.PORT
+
+if (port) {
+  app.listen(port)
+} else {
+  getPort({ port: 3000 }).then(function (port) {
+    app.listen(port)
+    console.log("Listening on port " + port );
+  })
+}
+
 // var server = http.createServer(function(request,response){
  
 //   response.writeHead(200, {
@@ -207,7 +189,7 @@ app.all('*', function (req, res, next) {
 //   });
 //   request.pipe(response);
 //   console.log(response);
-// })//.listen(port);
+// })
 
 
 // var port = process.argv[2] || process.env.PORT
@@ -219,13 +201,3 @@ app.all('*', function (req, res, next) {
 //     server.listen(port)
 //   })
 // }
-
-var port = process.argv[2] || process.env.PORT
-
-if (port) {
-  app.listen(port)
-} else {
-  getPort({ port: 3000 }).then(function (port) {
-    app.listen(port)
-  })
-}
